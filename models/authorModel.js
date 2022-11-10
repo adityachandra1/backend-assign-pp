@@ -1,6 +1,5 @@
 // author
-// (id, name, email, phone_no
-
+// (id, name, email, phone_no)
 const mongoose = require("mongoose");
 const { isEmail } = require("validator");
 const bcrypt = require("bcrypt");
@@ -36,3 +35,6 @@ authorSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, salt);
     next();
 })
+
+const Author = mongoose.model("Author", authorSchema);
+module.exports = Author;
