@@ -5,7 +5,7 @@
 [Link](https://www.figma.com/file/V6qLFgx7Se0nUywb6GNXhU/Server-Architecture?node-id=0%3A1)
 
 ## Postman Docs
-Link
+https://documenter.getpostman.com/view/17495243/2s8YesqBkC
 
 
 ## Run the API 
