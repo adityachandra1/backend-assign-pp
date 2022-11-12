@@ -8,13 +8,13 @@ const bookSchema = new mongoose.Schema(
             type: String,
             required: [true, "Please enter a title"],
         },
-        likes: {
-            type: Number,
-            required: [true],
-        },
         author: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Author"
+            ref: "Author",
+            required: [true, "Please enter an Author"]
+        },
+        likes: {
+            type: Number,
         }
     }
 );

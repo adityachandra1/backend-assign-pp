@@ -3,14 +3,19 @@
 // PUT /books/like/:id: To like a book.
 // PUT /books/unlike/:id: To, unlike a book.
 
-const express = require("express"); 
+const express = require("express");
 const router = express();
 
-const { isLoggedIn } = require("../middlewares/isLoggedIn");
-const {} = require("../controllers/bookControllers")
+const { checkLoggedIn } = require("../middlewares/isLoggedIn");
+const { showBooks, updateBook, deleteBook, uploadBook, likeBook, unlikeBook } = require("../controllers/bookControllers")
 
-// router.get("/books", books);
-// router.put("/books/like/:id", likeBook);
-// router.put("/books/unlike/:id", unlikeBook);
+// Having an isAdmin middleware would be better here
+router.post("/books/upload", uploadBook);
+router.put("/books/update", updateBook);
+router.delete("/books/delete", deleteBook);
+
+router.get("/books/", checkLoggedIn, showBooks);
+router.put("/books/like/:id", checkLoggedIn, likeBook);
+router.put("/books/unlike/:id", checkLoggedIn, unlikeBook);
 
 module.exports = router
