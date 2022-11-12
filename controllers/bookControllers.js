@@ -3,12 +3,14 @@ const Book = require("../models/bookModel");
 const jwt = require('jsonwebtoken')
 
 const { getAuthorByToken } = require('../middlewares/getAuthorByToken');
-const { findById } = require("../models/bookModel");
-const { castObject } = require("../models/authorModel");
 
 const showBooks = async (req, res, next) => {
     try {
-        const book = await Book.find();
+        const {page = 1, limit = 5} = req.query
+        const book = await Book.find()
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+            .sort("-likes");
         if (!book)
             return res.status(404).send({
                 success: false,
@@ -16,6 +18,8 @@ const showBooks = async (req, res, next) => {
             });
 
         res.status(200).send({
+            success: true,
+            no_of_books: book.length,
             book
         });
     } catch (err) {
@@ -80,6 +84,7 @@ const updateBook = async (req, res, next) => {
         });
     }
 }
+
 const deleteBook = async (req, res, next) => {
     try {
         const { id } = req.body
@@ -129,7 +134,6 @@ const likeBook = async (req, res, next) => {
         book.likes = book.likes + 1;
         book = await Book.findByIdAndUpdate(book_id, book)
         author = await Author.findByIdAndUpdate(author._id, author);
-        author.save();
         return res.status(200).send({
             success: true,
             msg: "Liked a book"
@@ -172,7 +176,6 @@ const unlikeBook = async (req, res, next) => {
         book.likes = book.likes - 1;
         book = await Book.findByIdAndUpdate(book_id, book)
         author = await Author.findByIdAndUpdate(author._id, author);
-        author.save();
         return res.status(200).send({
             success: true,
             msg: "Disliked a book"

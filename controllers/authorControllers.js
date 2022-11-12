@@ -28,6 +28,7 @@ const getAuthors = async (req, res, next) => {
         }
         res.status(200).send({
             success: true,
+            total_count: author_list.length,
             author_list
         });
     } catch (err) {
