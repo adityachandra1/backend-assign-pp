@@ -1,4 +1,5 @@
 const Author = require("../models/authorModel");
+const Book = require("../models/bookModel");
 const jwt = require('jsonwebtoken')
 const { getAuthorByToken } = require('../middlewares/getAuthorByToken')
 
@@ -6,16 +7,28 @@ const { getAuthorByToken } = require('../middlewares/getAuthorByToken')
 
 const getAuthors = async (req, res, next) => {
     try {
-        const author = await Author.find();
-        if (!author)
+        const authors = await Author.find();
+        // console.log(authors)
+        if (!authors)
             return res.status(404).send({
                 success: false,
                 msg: "Author Not Found"
             });
-
+        let author_list = [];
+        for (var i = 0; i < authors.length; i++) {
+            let author = authors[i];
+            id = author._id;
+            let books_written = await Book.find({ author: id });
+            console.log(books_written.length);
+            no_of_books = books_written.length;
+            author_list.push({
+                author,
+                no_of_books
+            });
+        }
         res.status(200).send({
             success: true,
-            author
+            author_list
         });
     } catch (err) {
         console.log(err)
@@ -36,9 +49,12 @@ const getAuthorbyID = async (req, res, next) => {
                 msg: "Author Not Found"
             });
 
+        let books_written = await Book.find({ author: author._id });
+        // console.log(books_written.length);
         res.status(200).send({
             success: true,
-            author
+            author,
+            books_written,
         });
     } catch (err) {
         console.log(err);
@@ -55,8 +71,11 @@ const getCurrentAuthor = async (req, res, next) => {
                 msg: "Token in Valid, Login Again!"
             });
         } else {
+            let books_written = await Book.find({ author: author_response.author._id });
             return res.status(200).send({
-                author: author_response.author
+                success: true,
+                author: author_response.author, 
+                books_written
             });
         }
     } catch (err) {
@@ -97,7 +116,7 @@ const updateAuthor = async (req, res, next) => {
             phone_no: phone_no || author.phone_no
         });
         console.log(new_author);
-        author = await Author.findByIdAndUpdate(id, {name: new_author.name, email: new_author.email, phone_no: new_author.phone_no})
+        author = await Author.findByIdAndUpdate(id, { name: new_author.name, email: new_author.email, phone_no: new_author.phone_no })
         await author.save();
         res.status(200).send(
             `${new_author.name} updated successfully`

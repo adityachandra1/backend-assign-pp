@@ -66,7 +66,7 @@ const updateBook = async (req, res, next) => {
             title: title || book.title,
             author: author || book.author,
         })
-        console.log(new_book)
+        // console.log(new_book)
         book = await Book.findByIdAndUpdate(id, { title: new_book.title, author: new_book.author})
         await book.save();
         res.status(200).send(
@@ -122,15 +122,10 @@ const likeBook = async (req, res, next) => {
                 msg: "You Cannot Like the book Twice"
             });
         } else {
-            console.log(author.likes);
+            // console.log(author.likes);
             author.likes.push(book._id);
-            for (var i = 0; i < author.dislikes.length; i++) {
-                if (author.dislikes[i] === book_id) {
-                    var spliced = author.dislikes.splice(i, 1);
-                }
-            }
         }
-        console.log(author.likes);
+        // console.log(author.likes);
         book.likes = book.likes + 1;
         book = await Book.findByIdAndUpdate(book_id, book)
         author = await Author.findByIdAndUpdate(author._id, author);
@@ -173,7 +168,7 @@ const unlikeBook = async (req, res, next) => {
                 }
             }
         }
-        console.log(author.likes);
+        // console.log(author.likes);
         book.likes = book.likes - 1;
         book = await Book.findByIdAndUpdate(book_id, book)
         author = await Author.findByIdAndUpdate(author._id, author);
