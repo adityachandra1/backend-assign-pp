@@ -1,9 +1,9 @@
 {
-  "name" : "pp", 
-  "version" : "1.0.0",
-  "main" : "index.js", 
-  "scripts":{
-    "start" : "nodemon index.js"
+  "name": "pp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -15,5 +15,8 @@
     "nodemon": "^2.0.20",
     "sessionstorage": "^0.1.0",
     "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0"
   }
 }

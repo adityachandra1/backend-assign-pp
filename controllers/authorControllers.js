@@ -19,12 +19,14 @@ const getAuthors = async (req, res, next) => {
             let author = authors[i];
             id = author._id;
             let books_written = await Book.find({ author: id });
-            console.log(books_written.length);
+            // console.log(books_written.length);
             no_of_books = books_written.length;
             author_list.push({
                 author,
                 no_of_books
             });
+
+            author_list.sort()
         }
         res.status(200).send({
             success: true,

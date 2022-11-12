@@ -2,9 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const { connectDB } = require("./config/db");
+const { seedRandomData } = require("./seeder.js")
+
 const authorRoutes = require('./routes/authorRoutes');
 const authRoutes = require('./routes/authRoutes');
 const bookRoutes = require('./routes/bookRoutes');
+
 
 
 require("dotenv").config();
@@ -20,6 +23,7 @@ app.listen(process.env.PORT || TEST_PORT, async () => {
     try {
         console.log(`Listening at port: ${process.env.PORT || TEST_PORT}...`);
         await connectDB();
+        await seedRandomData(10);
     } catch (err) {
         console.log("Connection to Mongo unsuccessful...\n" + err);
         process.exit();
@@ -27,7 +31,7 @@ app.listen(process.env.PORT || TEST_PORT, async () => {
 });
 
 app.get("/test", (req, res) => {
-    res.send("Hello World!");
+    res.send("Server is Running!");
 })
 
 app.use(authRoutes)
