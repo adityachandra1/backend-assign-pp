@@ -2,15 +2,17 @@
 // GET /authors/:id: To return the details of the author with the given author id with list of books.
 // GET /authors/me: To return the details of the logged-in author.
 
-const express = require("express"); 
+const express = require("express");
 const router = express();
 
-const { getAuthors, getAuthorbyID, getCurrentAuthor } = require("../controllers/authorControllers")
-const { checkLoggedIn } = require('../middlewares/isLoggedIn');
+const { getAuthors, getAuthorbyID, getCurrentAuthor, updateAuthor, deleteAuthor } = require("../controllers/authorControllers")
 
-router.get("/authors", checkLoggedIn, getAuthors);
-router.get("/authors/me/", checkLoggedIn, getCurrentAuthor);
-router.get("/authors/:id", checkLoggedIn, getAuthorbyID);
+router.get("/authors", getAuthors);
+router.get("/authors/me/", getCurrentAuthor);
+router.get("/authors/:id", getAuthorbyID);
+
+router.put("/authors/update/", updateAuthor);
+router.delete("/authors/delete/", deleteAuthor);
 
 
 module.exports = router

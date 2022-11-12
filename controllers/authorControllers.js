@@ -1,5 +1,8 @@
 const Author = require("../models/authorModel");
 const jwt = require('jsonwebtoken')
+const { getAuthorByToken } = require('../middlewares/getAuthorByToken')
+
+
 
 const getAuthors = async (req, res, next) => {
     try {
@@ -45,25 +48,16 @@ const getAuthorbyID = async (req, res, next) => {
 const getCurrentAuthor = async (req, res, next) => {
     try {
         const header = req.headers["authorization"];
-        const HL = header.split(' ');
-        const token = HL[1];
-        console.log(token);
-        const payload = jwt.verify(token, process.env.JWT_SECRET)
-        try {
-            console.log(payload)
-            const author = await Author.findById(payload.id);
-            if (!author)
-                return res.status(404).send({
-                    success: false,
-                    msg: "Author Not Found"
-                });
-
-            res.status(200).send({
-                success: true,
-                author
+        const author_response = await getAuthorByToken(header);
+        if (author_response.success == "false") {
+            return res.status(500).send({
+                success: false,
+                msg: "Token in Valid, Login Again!"
             });
-        } catch (err) {
-            console.log(err);
+        } else {
+            return res.status(200).send({
+                author: author_response.author
+            });
         }
     } catch (err) {
         console.log(err)
@@ -74,4 +68,63 @@ const getCurrentAuthor = async (req, res, next) => {
     }
 }
 
-module.exports = { getAuthors, getAuthorbyID, getCurrentAuthor };
+const updateAuthor = async (req, res, next) => {
+    try {
+        const { id, name, phone_no, email } = req.body
+        let author = await Author.findById(id);
+        if (!author)
+            return res.status(404).send({
+                success: false,
+                msg: "Author Not Found"
+            });
+        let authorTest = await Author.findOne({ email });
+        if (authorTest)
+            return res.status(401).send({
+                success: false,
+                msg: "Email Already Exists"
+            });
+
+        authorTest = await Author.findOne({ phone_no });
+        if (authorTest)
+            return res.status(404).send({
+                success: false,
+                msg: "Phone Number already Exists"
+            });
+
+        const new_author = new Author({
+            name: name || author.name,
+            email: email || author.email,
+            phone_no: phone_no || author.phone_no
+        });
+        console.log(new_author);
+        author = await Author.findByIdAndUpdate(id, {name: new_author.name, email: new_author.email, phone_no: new_author.phone_no})
+        await author.save();
+        res.status(200).send(
+            `${new_author.name} updated successfully`
+        );
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send({
+            success: false,
+            msg: "Unable to fetch authors"
+        });
+    }
+}
+const deleteAuthor = async (req, res, next) => {
+    try {
+        const { id } = req.body
+        let author = await Author.findById(id);
+        author = await Author.findByIdAndDelete(id)
+        res.status(200).send(
+            `${id} deleted successfully`
+        );
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send({
+            success: false,
+            msg: "Unable to fetch authors"
+        });
+    }
+}
+
+module.exports = { getAuthors, getAuthorbyID, getCurrentAuthor, updateAuthor, deleteAuthor };

@@ -2,10 +2,17 @@ const jwt = require('jsonwebtoken');
 const Author = require('../models/authorModel');
 
 const checkLoggedIn = async (req, res, next) => {
-    const header = req.headers["authorization"];
-    const HL = header.split(' ');
-    const token = HL[1];
-    if (!token) {
+    try {
+        const header = req.headers["authorization"];
+        const HL = header.split(' ');
+        const token = HL[1];
+        if (!token) {
+            return res.status(401).json({
+                success: false,
+                msg: "No token found. Please log in again.",
+            })
+        }
+    } catch (err) {
         return res.status(401).json({
             success: false,
             msg: "No token found. Please log in again.",

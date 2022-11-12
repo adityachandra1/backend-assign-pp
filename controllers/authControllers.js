@@ -103,6 +103,7 @@ const logout = async (req, res, next) => {
                     },
                 }
             );
+            console.log(`${author._id} logged Out`);
             return res.status(200).send({
                 success: true,
                 msg: "Logged Out Successfully",

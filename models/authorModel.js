@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const { isEmail } = require("validator");
 const bcrypt = require("bcrypt");
 
+const Book = require('./bookModel');
+
 const authorSchema = new mongoose.Schema(
     {
         name: {
@@ -26,7 +28,11 @@ const authorSchema = new mongoose.Schema(
             type: Number,
             unique: true,
             required: [true, 'Please enter a phone number'],
-        }
+        },
+        likes: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Book",
+        }], 
     }
 );
 
