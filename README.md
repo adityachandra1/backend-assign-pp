@@ -18,3 +18,4 @@ npm start
 ```
 
 - 10 random authors and multiple book entries for each author will automatically be created whenever the server starts/restarts. (Done using Faker.js)
+- Default password the the randomly generated accounts is "password".
