@@ -71,8 +71,7 @@ const updateBook = async (req, res, next) => {
             author: author || book.author,
         })
         // console.log(new_book)
-        book = await Book.findByIdAndUpdate(id, { title: new_book.title, author: new_book.author})
-        await book.save();
+        book = await Book.findByIdAndUpdate(id, { title: new_book.title, author: new_book.author });
         res.status(200).send(
             `${title} updated successfully`
         );
@@ -94,8 +93,7 @@ const deleteBook = async (req, res, next) => {
                 success: false,
                 msg: "Book Not Found"
             });
-        book = await Book.findByIdAndDelete(id)
-        await book.save();
+        book = await Book.findByIdAndDelete(id);
         res.status(200).send(
             `${id} deleted successfully`
         );

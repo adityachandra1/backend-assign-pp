@@ -119,8 +119,7 @@ const updateAuthor = async (req, res, next) => {
             phone_no: phone_no || author.phone_no
         });
         console.log(new_author);
-        author = await Author.findByIdAndUpdate(id, { name: new_author.name, email: new_author.email, phone_no: new_author.phone_no })
-        await author.save();
+        author = await Author.findByIdAndUpdate(id, { name: new_author.name, email: new_author.email, phone_no: new_author.phone_no });
         res.status(200).send(
             `${new_author.name} updated successfully`
         );
